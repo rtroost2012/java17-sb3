@@ -39,7 +39,6 @@
 
 					Aegon Hypotheken
 
-					<span class="small">linkedin.com/in/robbin-troost-b912806b</span>
 
 					Notes:
 					* IT-for-IT bij Aegon Hypotheken
@@ -52,7 +51,7 @@
 					
 					Java Developer
 					
-					ABN AMRO - Internet banking (Payments)
+					ABN AMRO - Personal Banking
 
 					Notes:
 					* 51 jaar
@@ -102,7 +101,7 @@
 					| 8   | lambdas, stream API, java.nio (7), default methods    |
 					| 11  | var keyword (10), http client, lambda local var syntax  |
 
-					---
+					--
 
 					## Wat gaan we bekijken?
 
@@ -167,7 +166,7 @@
 					true
 					```
 
-					---
+					--
 
 					## Pattern matching (instanceOf)
 
@@ -224,7 +223,7 @@
 					}
 					```
 
-					---
+					--
 
 					## Text blocks
 
@@ -250,7 +249,7 @@
 							""";
 					```
 
-					---
+					--
 
 					## Helpful NullPointerExceptions
 
@@ -278,7 +277,7 @@
 						at com.company.Application.main(App.java:21)
 					```
 
-					---
+					--
 
 					## Switch expression
 
@@ -304,7 +303,7 @@
 					Notes:
 					Een expressie produceert altijd een resultaat, een statement niet (bijv. een void call)
 
-					---
+					--
 
 					## Sealed classes
 
@@ -334,7 +333,7 @@
 					* Design for extension, else prohibit it?
 					* Laatste punt kun je denken aan een abstract class
 
-					---
+					--
 
 					## Improved streams API
 
@@ -353,7 +352,7 @@
 
 					Let op: `toList()` geeft een immutable List
 
-					---
+					--
 
 					## Vector API (incubator)
 
@@ -393,7 +392,7 @@
 							.neg();
 					```
 
-					---
+					--
 
 					## Foreign Function and Memory Access API (incubator)
 
@@ -433,7 +432,7 @@
 						MemoryAddress.NULL, '\0');
 					```
 
-					---
+					--
 
 					## Waarom (geen) Java 17 gebruiken
 
@@ -448,7 +447,7 @@
 					--
 
 					## Pros
-					* Spring Boot 3+ heeft het nodig
+					* Spring Boot 3+ heeft Java 17 nodig
 					* Bug fixes, security improvements
 					* Je hoeft niet gelijk nieuwe features te gebruiken
 					* Instant performance boost
@@ -508,7 +507,7 @@
 					Auto-configuration voor [Micrometer Tracing](https://docs.spring.io/spring-boot/docs/3.0.0/reference/html/actuator.html#actuator.micrometer-tracing)
 					Support
 					* Brave, OpenTelemetry, Zipkin, Wavefront
-					* (Auto-config) support OtlpMeterRegsitry, 
+					* (Auto-config) support OtlpMeterRegistry, 
 					* (Auto-config) support Prometheus Examplars (maakt trace ID beschikbaar voor Prometheus)
 
 					--
@@ -625,16 +624,11 @@
 
 					---
 
-					Migratie-ervaringen bij de klant
-
-					--
-
-					Aegon Hypotheken
+					Migratie-ervaringen bij Aegon Hypotheken
 
 					--
 
 					* Algemene aanpak incl. Java 17
-					* WebMVC controller changes
 					* Bootstrap properties
 					* Spring.factories
 
@@ -674,36 +668,7 @@
 					echo "##vso[task.setvariable variable=JAVA_HOME]$JAVA_HOME"
 					```
 
-					---
-
-					WebMVC controller changes
-
 					--
-
-					```java
-					@RestController
-					public class MyController {
-					  @GetMapping("/some/greeting")
-					  public String greeting() {
-						return "Hello";
-					  }
-					}
-					```
-
-					Terugzetten oude gedrag:
-					```java
-					@Configuration
-					public class WebConfiguration implements WebMvcConfigurer {
-						@Override
-						public void configurePathMatch(
-							PathMatchConfigurer configurer
-						) {
-						  configurer.setUseTrailingSlashMatch(true);
-						}
-					}
-					```
-
-					---
 
 					Autoconfig in spring.factories deprecation (2.4x)
 
@@ -735,7 +700,7 @@
 					Zie ook https://github.com/spring-projects/spring-boot/issues/29699
 
 
-					---
+					--
 
 					Bootstrap.properties deprecation (2.4x)
 
@@ -772,11 +737,14 @@
 
 					--
 
-					// TBD aan het eind.
+					* Eerst naar Java 17 en dan Spring Boot 3 
+					* Alle grote frameworks / tooling werkt al
+					* Gratis updates van 2.x stoppen
+					* Het is leuk om met de laatste technologie te werken	
 
-					---
+					--
 
-					## Thank you!
+					## Bedankt!
 
 					</textarea>
 				</section>
