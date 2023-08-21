@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>Java 17 en Spring Boot 3</title>
+		<title>Java 17</title>
 
 		<link rel="stylesheet" href="reveal.js/dist/reset.css">
 		<link rel="stylesheet" href="reveal.js/dist/reveal.css">
@@ -25,57 +25,27 @@
                 <!-- Slides are separated by newline + three dashes + newline, vertical slides identical but two dashes -->
                 <section data-markdown data-separator="^\n---\n$" data-separator-vertical="^\n--\n$">
 					<textarea data-template>
-					## Java 17 en Spring Boot 3
-					<img src="images/java_small.png" width="40%"/>
-					<img src="images/spring_boot.png" width="40%"/>
+					## Java 17
+					<img src="images/java_small.png"/>
 
 					--
 
-					## Wie zijn wij?
+					## Wie ben ik?
 
 					Robbin Troost
 
-					Java Developer
+					Team Ghostbusters
 
-					Aegon Hypotheken
-
-
-					Notes:
-					* IT-for-IT bij Aegon Hypotheken
-					* 26 jaar woonachtig in Leersum
-					* Java Masterclass.
-
-					--
-
-					Joost van Gils
-					
-					Java Developer
-					
-					ABN AMRO - Personal Banking
-
-					Notes:
-					* 51 jaar
-					* Java sinds 2001 (Java 1.3), also Scala + functional programming style
-					* Bij AA sinds november 2022
-					* Hobbies: tech, music (midi), home automation		
-					
 					--
 
 					## Context
 
-					* Spring Boot 2.x EOL
+					* Commons 6 / Spring Boot 3
 					* Upgraden vereist minimaal Java 17
 					* Nieuwe features in zowel Spring als Java
-					* Migratie-ervaring en takeaways
 
-					Notes:
-					Spring Boot 2.7 is EOL op 18 november 2023.
-					Commerciele support loopt nog tot 18 feb 2025.
+					Notes: meeste is syntactic sugar. Komt allemaal voort uit JEPs.
 
-					---
-
-					## Java 17
-					
 					--
 
 					## Java is iets meer dan 27 jaar oud
@@ -112,12 +82,23 @@
 					* Switch expressions
 					* Sealed classes
 					* Improved Stream API
-					* Vector API (incubator)
-					* Foreign Function and Memory Access API (incubator)
 
 					--
 
 					## Records
+
+					--
+
+					```java
+					public class Point() {
+
+						private long x;
+						private long y;
+
+						// getters
+						// setters
+					}
+					```
 
 					--
 
@@ -324,8 +305,8 @@
 					--
 
 					Waarom?
-					* Een enum is exhaustive voor switch, maar wat als we type classes gaan checken?
-					* Zonder deze construct final of package-private, alles of niets.
+					* Een enum is exhaustive voor switch, maar wat als het type van een class willen checken?
+					* Handig als je een library ontwikkelt met een stukje polymorfisme erin.
 					* Meer vrijheid voor de ontwikkelaar: widely accessible, not widely extensible
 
 					Notes:
@@ -354,397 +335,13 @@
 
 					--
 
-					## Vector API (incubator)
+					Interessante incubators
+					* Vector API: https://openjdk.org/jeps/417
+					* Foreign Function and Memory Access API: https://openjdk.org/jeps/442
 
 					--
 
-					* Vierde incubator, dus vrij complex (sinds 2018)
-					* Meerdere berekeningen in een enkele CPU-cycle (SIMD)
-					* Sneller dan equivalente scalar operations
-					* Platform-agnostisch
-					* Auto vectorisation
-
-					--
-
-					Voorheen:
-
-					```java
-					s[0] = s[0] + v[0];
-					s[1] = s[1] + v[1];
-					s[2] = s[2] + v[2];
-					s[3] = s[3] + v[3];
-					```
-
-					Java 16+
-					```java
-					float[] a = new float[] {1f, 2f, 3f, 4f}; // 4x32 bits
-					float[] b = new float[] {5f, 8f, 10f, 12f}; // 4x32 bits
-
-					// allebei de vectors 128 bits want 4x32, 0 offset
-					FloatVector first = FloatVector.fromArray(
-						FloatVector.SPECIES_128, a, 0);
-					FloatVector second = FloatVector.fromArray(
-						FloatVector.SPECIES_128, b, 0);
-
-					FloatVector result = first
-							.add(second)
-							.pow(2)
-							.neg();
-					```
-
-					--
-
-					## Foreign Function and Memory Access API (incubator)
-
-					--
-
-					* Backbone voor o.a. de Vector API
-					* Momenteel alleen C-libraries
-					* Voorheen JNI, maar vrij beperkt
-					* Functie calls en memory buiten de JVM uitvoeren en aanspreken
-					* Efficient en veilig
-
-					Notes:
-					* Bij JNI moest het JVM/platform-specific gecompiled worden om met elkaar te laten werken
-
-					--
-
-					Extern memory gebruiken:
-
-					```java
-					// Allocate off-heap memory to store four pointers
-					String[] javaStrings = { "mouse", "cat", "dog", "car" };
-
-					MemorySegment offHeap = MemorySegment.allocateNative(
-						MemoryLayout.ofSequence(javaStrings.length,
-							CLinker.C_POINTER));
-					```
-
-
-					Een externe C-functie aanroepen:
-					```java
-					MethodHandle radixSort = CLinker.getInstance()
-						.downcallHandle(
-							CLinker.systemLookup().lookup("radixsort"), ...
-						);
-
-					radixSort.invoke(offHeap.address(), javaStrings.length,
-						MemoryAddress.NULL, '\0');
-					```
-
-					--
-
-					## Waarom (geen) Java 17 gebruiken
-
-					--
-
-					## Cons
-					* Geen toegevoegde waarde om te upgraden
-					* Niet alle libraries zullen al werken op Java 17
-					* Infra die achterloopt (IDE, SonarQube, build agents, live environments)
-					* Gebruik van nieuwe features vereist ook up-to-date kennis
-
-					--
-
-					## Pros
-					* Spring Boot 3+ heeft Java 17 nodig
-					* Bug fixes, security improvements
-					* Je hoeft niet gelijk nieuwe features te gebruiken
-					* Instant performance boost
-  						Java 17 is ongeveer 8.5% sneller dan Java 11 op de G1 GC en 6.5% op de parallel GC ([source](https://www.optaplanner.org/blog/2021/09/15/HowMuchFasterIsJava17.html)).
-
-					---
-
-					## Spring Boot 3
-					
-					--
-
-					## Wat is nieuw?
-					([release notes](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Release-Notes))
-
-					--
-
-					## Jakarta EE
-					versie 9 met support voor 10				
-					
-					Maar dus ook: Hibernate Validator 7+, Tomcat 10+, en Jetty 11+
-
-					--
-
-					## Spring Native
-
-					```sh
-					mvn spring-boot:aot-generate
-					```
-					SB3 vervangt Spring Native, geen extra plug-ins nodig
-
-					--
-
-					## Observability
-					[Auto-configuration voor Micrometer](https://docs.spring.io/spring-boot/docs/3.0.0/reference/html/actuator.html#actuator.observability)
-					```java
-						@Component
-						public class MyCustomObservation {
-							private final ObservationRegistry observationRegistry;
-							public MyCustomObservation(ObservationRegistry observationRegistry) {
-								this.observationRegistry = observationRegistry;
-							}
-							public void doSomething() {
-								Observation.createNotStarted("doSomething", this.observationRegistry)
-									.lowCardinalityKeyValue("locale", "en-US")
-									.highCardinalityKeyValue("userId", "42")
-									.observe(() -> {
-				// Execute business logic here
-									});
-							}
-						}
-					```
-
-					--
-
-					## Meer observability
-					
-					Auto-configuration voor [Micrometer Tracing](https://docs.spring.io/spring-boot/docs/3.0.0/reference/html/actuator.html#actuator.micrometer-tracing)
-					Support
-					* Brave, OpenTelemetry, Zipkin, Wavefront
-					* (Auto-config) support OtlpMeterRegistry, 
-					* (Auto-config) support Prometheus Examplars (maakt trace ID beschikbaar voor Prometheus)
-
-					--
-
-					## Spring MVC
-
-					Problem Details Standard [RFC7807](https://github.com/spring-projects/spring-framework/issues/27052) 
-					
-					zonder extra dependencies
-
-					--
-
-					```java
-					Problem.builder()
-						.withType(URI.create("https://example.org/out-of-stock"))
-						.withTitle("Out of Stock")
-						.withStatus(BAD_REQUEST)
-						.withDetail("Item B00027Y5QG is no longer available")
-						.with("product", "B00027Y5QG")
-						.build();
-					```
-					```json
-					{
-						"type": "https://example.org/out-of-stock",
-						"title": "Out of Stock",
-						"status": 400,
-						"detail": "Item B00027Y5QG is no longer available",
-						"product": "B00027Y5QG"
-					}
-					```
-					
-
-					--
-
-					## Spring MVC
-
-					`HttpMethod` is nu een class
-					```java
-					HttpMethod lock = HttpMethod.valueOf("LOCK");
-					```
-
-					--
-
-					## Trailing slash
-
-					`GET /api/v1/todos/name/`
-					
-					matcht standaard niet meer op
-
-					```java
-					@RequestMapping("/api/v1/todos/name")
-					```
-
-					--
-
-					## Andere zaken
-
-					* Apache HttpClient5 ipv HttpClient
-					* Veel veranderingen in Actuator
-					* Veranderingen in Spring Batch
-					* Veel algemene verbeteringen en naamswijzigingen van properties
-
-					--
-
-					## Migrating
-
-					* Migreer eerst naar Spring Boot 2.7
-					* Gebruik je Spring Security, upgrade eerst naar [versie 5.8](https://docs.spring.io/spring-security/reference/5.8/migration/index.html)
-					* Check voor gebruik deprecated code
-					* Heb je nog [legacy config file processing](https://spring.io/blog/2020/08/14/config-file-processing-in-spring-boot-2-4) nodig?
-					* Migreer naar Java 17
-					* Check alle 3rd-party dependencies, moet Jakarta EE9+ zijn
-					* Check ook Spring Cloud dependencies
-					* Lees de [migration guide](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide)
-
-					--
-
-					## Jakarta EE
-					```java
-					import javax.servlet.http.HttpServletRequest;
-					```
-					wordt
-					```java
-					import jakarta.servlet.http.HttpServletRequest;
-					```	
-
-					--
-
-					## Migration - Properties
-
-					bijvoorbeeld
-					
-					`server.max.http.header.size` 
-					
-					naar 
-					
-					`server.max-http-request-header-size`
-					```xml
-					<dependency>
-						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-properties-migrator</artifactId>
-						<scope>runtime</scope>
-					</dependency>
-					```
-
-					--
-
-					## Meer lezen
-					
-					* [Release notes Spring Boot 3](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Release-Notes)
-					* [Release notes Spring 6.0](https://github.com/spring-projects/spring-framework/wiki/What's-New-in-Spring-Framework-6.x)
-					* [Migration guide](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide)
-					* [Spring Security 6.0 migration](https://docs.spring.io/spring-security/reference/6.0/migration/index.html)
-
-					---
-
-					Migratie-ervaringen bij Aegon Hypotheken
-
-					--
-
-					* Algemene aanpak incl. Java 17
-					* Bootstrap properties
-					* Spring.factories
-
-					--
-
-					Stack
-					* Maven
-					* SonarQube 8.9.10 Enterprisie
-					* Kubernetes op AWS
-					* Docker containers voor deployment en microservice
-					* Parent pom voor versiebeheer richting teams
-
-					--
-
-					Vragen
-					* Support SonarQube Java 17?
-					* Hoe ondersteunen we versie 11 en 17 tegelijk?
-					* Hoe zorgen we dat teams vooruitgaan naar versie 17?
-
-					--
-
-					* Build container: versie 11 en 17 ondersteunen via SDKman
-					* De parent pom bevat een <java.version> die zich vertaalt naar een compiler target.
-					* In pipeline: target bepalen via POM
-
-					```sh
-					COMPILER_TARGET=$(mvn help:evaluate
-						-Dexpression="maven.compiler.target" \
-						--batch-mode
-						-DforceStdout \
-						-q)
-					```
-
-					```sh
-					JAVA_HOME="$SDKMAN_DIR/candidates/java/${COMPILER_TARGET}"
-					echo "Setting home to $JAVA_HOME"
-					echo "##vso[task.setvariable variable=JAVA_HOME]$JAVA_HOME"
-					```
-
-					--
-
-					Autoconfig in spring.factories deprecation (2.4x)
-
-					--
-
-					Spring 2.x via spring.factories:
-					```java
-					resources/META-INF/spring.factories
-					 -> org.springframework.boot.autoconfigure.EnableAutoConfiguration=xxx
-					```
-
-					En de autoconfiguratie:
-					```java
-					@ComponentScan("com.aegon.commons.amqp")
-
-					@PropertySource('...')
-
-					public class { /* ....*/ }
-					```
-
-					Vanaf Spring 2.7:
-					```java
-					resources/META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports
-					```
-
-					Vanaf Spring 3.0: geen spring.factories support meer voor autoconfiguration
-
-					Notes:
-					Zie ook https://github.com/spring-projects/spring-boot/issues/29699
-
-
-					--
-
-					Bootstrap.properties deprecation (2.4x)
-
-					--
-
-					* Spring Cloud gaat hand-in-hand met Spring versies (compatibility)
-					* Parent bootstrap context
-					* Verplaatsen naar application.properties
-					* Alternatieven:
-
-					Weer aanzetten
-					```
-						spring.cloud.bootstrap.enabled=true
-					```
-
-					Starter
-					```java
-					<dependency>
-						<groupId>org.springframework.cloud</groupId>
-						<artifactId>spring-cloud-starter-bootstrap</artifactId>
-					</dependency>
-					```
-
-					Notes:
-					Laadt externe properties en decrypt properties in locale config files.
-
-					Wordt bij ons samen gebruikt met Spring Cloud Config Server.
-					Application name wordt in de bootstrap gezet om het zo vroeg mogelijk beschikbaar te hebben.
-
-
-					---
-
-					Take-aways
-
-					--
-
-					* Eerst naar Java 17 en dan Spring Boot 3 
-					* Alle grote frameworks / tooling werkt al
-					* Gratis updates van 2.x stoppen
-					* Het is leuk om met de laatste technologie te werken	
-
-					--
-
-					## Bedankt!
+					## Vragen?
 
 					</textarea>
 				</section>
